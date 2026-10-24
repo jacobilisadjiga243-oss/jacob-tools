@@ -63,6 +63,11 @@ def accueil():
             conn.close()
     return render_template('index.html', contenus=contenus)
 
+
+@app.route('/apropos')
+def apropos():
+    return render_template('apropos.html')
+
 @app.route(ADMIN_URL, methods=['GET', 'POST'])
 def admin():
     if session.get('logged_in'):

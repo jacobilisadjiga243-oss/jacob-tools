@@ -1,0 +1,107 @@
+﻿html_content = """<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À propos - Jacob Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #0b1120; color: #e2e8f0; overflow-x: hidden; }
+        
+        /* NAVIGATION */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: rgba(11, 17, 32, 0.95); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px); }
+        .logo { font-size: 1.6em; font-weight: 800; color: white; text-decoration: none; letter-spacing: 1px; }
+        .logo span { color: #38bdf8; }
+        .menu-toggle { display: none; font-size: 1.8em; color: white; cursor: pointer; }
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { color: #cbd5e1; text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: #38bdf8; }
+        .btn-nav { background: linear-gradient(90deg, #38bdf8, #0ea5e9); color: #0b1120 !important; padding: 10px 25px; border-radius: 50px; font-weight: 700; }
+
+        /* CONTENU */
+        .container { max-width: 1000px; margin: 120px auto 60px; padding: 0 20px; }
+        .about-section { background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #334155; margin-bottom: 40px; text-align: center; }
+        .about-section h1 { color: #38bdf8; font-size: 2.5em; margin-bottom: 20px; }
+        .about-section p { color: #cbd5e1; font-size: 1.1em; line-height: 1.8; margin-bottom: 20px; }
+        
+        /* FORMULAIRE */
+        .contact-section { background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #334155; }
+        .contact-section h2 { color: white; font-size: 2em; margin-bottom: 20px; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #cbd5e1; font-size: 0.9em; }
+        .form-group input, .form-group textarea { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-family: inherit; font-size: 1em; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #38bdf8; }
+        
+        button.btn-submit { width: 100%; padding: 16px; background: linear-gradient(90deg, #38bdf8, #0ea5e9); color: #0b1120; border: none; border-radius: 8px; font-weight: 700; font-size: 1.1em; cursor: pointer; transition: 0.3s; }
+        button.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 189, 248, 0.4); }
+
+        /* FOOTER */
+        footer { background: #0f172a; padding: 40px 5%; text-align: center; border-top: 1px solid #1e293b; margin-top: 60px; }
+        .copyright { color: #475569; font-size: 0.9em; }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: #0f172a; padding: 20px 0; border-bottom: 1px solid #1e293b; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+            .nav-links.active { display: flex; }
+            .nav-links a { margin: 15px 0; font-size: 1.1em; width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">JACOB<span>TOOLS</span></a>
+        <div class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</div>
+        <div class="nav-links">
+            <a href="/">Accueil</a>
+            <a href="/#formations">Formations</a>
+            <a href="/apropos">À propos</a>
+            <a href="/#contact" class="btn-nav">Contact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- SECTION A PROPOS -->
+        <div class="about-section">
+            <h1>À propos de Jacob Tools</h1>
+            <p>Bienvenue sur <strong>Jacob Tools</strong>, votre plateforme de référence pour maîtriser les technologies du numérique.</p>
+            <p>Notre mission est simple : rendre accessibles à tous les formations de haute qualité sur le déblocage mobile, les systèmes d'exploitation et le marketing digital. Nous croyons que la connaissance doit être partagée et que chacun mérite de pouvoir développer ses compétences pour réussir dans le monde digital d'aujourd'hui.</p>
+            <p>Grâce à nos vidéos exclusives et à nos méthodes éprouvées, des milliers de personnes ont déjà transformé leur passion en véritable métier.</p>
+        </div>
+
+        <!-- SECTION CONTACT -->
+        <div class="contact-section">
+            <h2>Contactez-nous</h2>
+            <p style="text-align: center; color: #94a3b8; margin-bottom: 30px;">Une question ? Un projet ? Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.</p>
+            
+            <!-- Le formulaire n'est pas encore connecté à un serveur mail, on le fera à l'étape suivante -->
+            <form onsubmit="event.preventDefault(); alert('Formulaire envoyé ! (Nous allons configurer l\'envoi d\'email bientôt)');">
+                <div class="form-group">
+                    <label>Votre nom</label>
+                    <input type="text" placeholder="Entrez votre nom" required>
+                </div>
+                <div class="form-group">
+                    <label>Votre adresse email</label>
+                    <input type="email" placeholder="Entrez votre email" required>
+                </div>
+                <div class="form-group">
+                    <label>Votre message</label>
+                    <textarea rows="5" placeholder="Décrivez votre demande..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Envoyer le message</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyright">
+            &copy; 2026 Jacob Tools. Tous droits réservés.
+        </div>
+    </footer>
+</body>
+</html>"""
+
+with open('templates/apropos.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("✅ La page apropos.html a ete creee !")
