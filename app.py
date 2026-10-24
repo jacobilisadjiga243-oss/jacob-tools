@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = "jacob_tools_secret_2026"
 ADMIN_URL = "/admin"
-HASHED_PASSWORD = generate_password_hash("jacob123")
+HASHED_PASSWORD = generate_password_hash(os.getenv("ADMIN_PASSWORD", "jacob123"))
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 def get_db():
@@ -36,6 +36,15 @@ def init_db():
                         description TEXT NOT NULL,
                         lien TEXT,
                         categorie VARCHAR(50) NOT NULL
+                    );
+                """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS utilisateurs (
+                        id SERIAL PRIMARY KEY,
+                        nom VARCHAR(100) NOT NULL,
+                        email VARCHAR(255) UNIQUE NOT NULL,
+                        mot_de_passe TEXT NOT NULL,
+                        date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                 """)
             conn.commit()
@@ -89,6 +98,64 @@ def video_detail(id):
         return 'Vidéo introuvable', 404
         
     return render_template('video.html', video=video)
+
+
+# --- ROUTES CLIENTS (INSCRIPTION / CONNEXION) ---
+@app.route('/inscription', methods=['GET', 'POST'])
+def inscription():
+    if request.method == 'POST':
+        nom = request.form.get('nom')
+        email = request.form.get('email')
+        mot_de_passe = request.form.get('mot_de_passe')
+        
+        hashed_password = generate_password_hash(mot_de_passe)
+        
+        conn = get_db()
+        if conn:
+            try:
+                with conn.cursor() as cur:
+                    cur.execute("INSERT INTO utilisateurs (nom, email, mot_de_passe) VALUES (%s, %s, %s);",
+                                (nom, email, hashed_password))
+                conn.commit()
+                return redirect(url_for('connexion'))
+            except Exception as e:
+                print(f"Erreur inscription: {e}")
+                return render_template('inscription.html', erreur="Cet email est déjà utilisé.")
+            finally:
+                conn.close()
+    return render_template('inscription.html', erreur="")
+
+@app.route('/connexion', methods=['GET', 'POST'])
+def connexion():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        mot_de_passe = request.form.get('mot_de_passe')
+        
+        conn = get_db()
+        if conn:
+            try:
+                with conn.cursor() as cur:
+                    cur.execute("SELECT id, nom, mot_de_passe FROM utilisateurs WHERE email = %s;", (email,))
+                    user = cur.fetchone()
+                    
+                if user and check_password_hash(user[2], mot_de_passe):
+                    session['user_id'] = user[0]
+                    session['user_nom'] = user[1]
+                    return redirect(url_for('accueil'))
+                else:
+                    return render_template('connexion.html', erreur="Email ou mot de passe incorrect.")
+            except Exception as e:
+                print(f"Erreur connexion: {e}")
+                return render_template('connexion.html', erreur="Une erreur est survenue.")
+            finally:
+                conn.close()
+    return render_template('connexion.html', erreur="")
+
+@app.route('/deconnexion')
+def deconnexion():
+    session.pop('user_id', None)
+    session.pop('user_nom', None)
+    return redirect(url_for('accueil'))
 
 @app.route(ADMIN_URL, methods=['GET', 'POST'])
 def admin():
