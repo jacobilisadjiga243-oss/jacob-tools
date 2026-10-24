@@ -1,0 +1,279 @@
+﻿html_content = """<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jacob Tools - Formations & Solutions Digitales</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: #0b1120; color: #e2e8f0; overflow-x: hidden; }
+        
+        /* --- NAVIGATION --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: rgba(11, 17, 32, 0.95); position: fixed; width: 100%; top: 0; z-index: 1000; border-bottom: 1px solid #1e293b; backdrop-filter: blur(10px); transition: 0.3s; }
+        .logo { font-size: 1.6em; font-weight: 800; color: white; text-decoration: none; letter-spacing: 1px; }
+        .logo span { color: #38bdf8; }
+        .menu-toggle { display: none; font-size: 1.8em; color: white; cursor: pointer; }
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { color: #cbd5e1; text-decoration: none; font-weight: 500; transition: 0.3s; font-size: 0.95em; }
+        .nav-links a:hover { color: #38bdf8; }
+        .btn-nav { background: linear-gradient(90deg, #38bdf8, #0ea5e9); color: #0b1120 !important; padding: 10px 25px; border-radius: 50px; font-weight: 700; box-shadow: 0 4px 15px rgba(56,189,248,0.3); }
+        .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56,189,248,0.5); }
+
+        /* --- SLIDER (DIAPORAMA) --- */
+        .slider-container { position: relative; width: 100%; height: 80vh; overflow: hidden; background: #0f172a; margin-top: 70px; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out; display: flex; align-items: center; justify-content: center; }
+        .slide.active { opacity: 1; z-index: 1; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; opacity: 0.4; }
+        .slide-content { position: relative; z-index: 2; text-align: center; max-width: 800px; padding: 40px; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); border-radius: 20px; border: 1px solid #334155; margin: 0 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .slide-content h2 { font-size: 3.5em; color: white; margin-bottom: 15px; font-weight: 800; }
+        .slide-content p { font-size: 1.2em; color: #cbd5e1; margin-bottom: 30px; }
+        .slider-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: #475569; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: #38bdf8; transform: scale(1.3); }
+
+        /* --- BOUTONS --- */
+        .btn { display: inline-block; padding: 16px 40px; background: linear-gradient(90deg, #38bdf8, #0ea5e9); color: #0b1120; text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 1.1em; transition: 0.3s; box-shadow: 0 4px 15px rgba(56,189,248,0.4); border: none; cursor: pointer; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(56,189,248,0.6); }
+
+        /* --- SECTIONS --- */
+        section { padding: 100px 5%; }
+        .section-titre { text-align: center; font-size: 2.5em; color: white; margin-bottom: 15px; font-weight: 800; }
+        .section-sous-titre { text-align: center; color: #94a3b8; margin-bottom: 60px; font-size: 1.1em; }
+
+        /* --- CATALOGUE (VIDEOS) --- */
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .card { background: #1e293b; border-radius: 16px; border: 1px solid #334155; overflow: hidden; transition: 0.3s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-8px); border-color: #38bdf8; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .card-img { height: 200px; width: 100%; object-fit: cover; }
+        .card-body { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; position: relative; }
+        .card-body h3 { color: white; margin-bottom: 10px; font-size: 1.3em; }
+        .card-body p { color: #94a3b8; font-size: 0.95em; margin-bottom: 25px; flex-grow: 1; }
+        
+        .badge { position: absolute; top: 15px; right: 15px; padding: 6px 15px; border-radius: 50px; font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; z-index: 10; }
+        .bg-deblocage { background: #38bdf8; color: #0b1120; }
+        .bg-hardreset { background: #f59e0b; color: #0b1120; }
+        .bg-frp { background: #ef4444; color: white; }
+        .bg-marketing { background: #f472b6; color: white; }
+        
+        .video-container { width: 100%; height: 200px; background: #000; }
+        .video-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* --- POURQUOI NOUS (AVEC IMAGES) --- */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+        .feature-item { background: #1e293b; border-radius: 16px; border: 1px solid #334155; transition: 0.3s; overflow: hidden; display: flex; flex-direction: column; }
+        .feature-item:hover { border-color: #38bdf8; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
+        .feature-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid #334155; }
+        .feature-content { padding: 30px; text-align: center; }
+        .feature-item h3 { color: white; font-size: 1.3em; margin-bottom: 10px; }
+        .feature-item p { color: #94a3b8; font-size: 0.95em; }
+
+        /* --- BOUTON FLOTTANT WHATSAPP --- */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+        }
+
+        /* --- FOOTER --- */
+        footer { background: #0f172a; padding: 60px 5% 30px; border-top: 1px solid #1e293b; text-align: center; }
+        .footer-content p { color: #94a3b8; margin-bottom: 20px; }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 30px; flex-wrap: wrap; }
+        .footer-links a { color: #cbd5e1; text-decoration: none; transition: 0.3s; }
+        .footer-links a:hover { color: #38bdf8; }
+        .copyright { color: #475569; font-size: 0.9em; }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: #0f172a; padding: 20px 0; border-bottom: 1px solid #1e293b; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+            .nav-links.active { display: flex; }
+            .nav-links a { margin: 15px 0; font-size: 1.1em; width: 100%; text-align: center; }
+            .slide-content h2 { font-size: 2em; }
+            .slider-container { height: 60vh; }
+            .whatsapp-float { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">JACOB<span>TOOLS</span></a>
+        <div class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</div>
+        <div class="nav-links">
+            <a href="/">Accueil</a>
+            <a href="#formations">Formations</a>
+            <a href="#services">Services</a>
+            <a href="#contact" class="btn-nav">Contact</a>
+        </div>
+    </nav>
+
+    <!-- SLIDER / DIAPORAMA -->
+    <div class="slider-container">
+        <div class="slide active">
+            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1920&auto=format&fit=crop" alt="Déblocage">
+            <div class="slide-content">
+                <h2>Maîtrisez le Déblocage Mobile</h2>
+                <p>Apprenez les techniques secrètes pour débloquer tous les smartphones.</p>
+                <a href="#formations" class="btn">Voir la formation</a>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1920&auto=format&fit=crop" alt="Système">
+            <div class="slide-content">
+                <h2>Dominez les Systèmes d'Exploitation</h2>
+                <p>Windows, Linux, Mac : devenez un expert en installation et dépannage.</p>
+                <a href="#formations" class="btn">Voir la formation</a>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="https://images.unsplash.com/photo-1557838923-2985c318be48?q=80&w=1920&auto=format&fit=crop" alt="Marketing">
+            <div class="slide-content">
+                <h2>Boostez votre Business en Ligne</h2>
+                <p>Les stratégies marketing les plus puissantes pour vendre dès aujourd'hui.</p>
+                <a href="#formations" class="btn">Voir la formation</a>
+            </div>
+        </div>
+        <div class="slider-dots">
+            <div class="dot active" onclick="currentSlide(0)"></div>
+            <div class="dot" onclick="currentSlide(1)"></div>
+            <div class="dot" onclick="currentSlide(2)"></div>
+        </div>
+    </div>
+
+    <!-- CATALOGUE -->
+    <section id="formations" style="background: #0f172a;">
+        <h2 class="section-titre">Nos Dernières Formations</h2>
+        <p class="section-sous-titre">Des cours vidéo conçus pour vous mener vers la réussite.</p>
+        
+        <div class="content-grid">
+            {% for item in contenus %}
+            <div class="card">
+                {% if item.categorie == 'Déblocage' %}<span class="badge bg-deblocage">{{ item.categorie }}</span>
+                {% elif item.categorie == 'Hard Reset' %}<span class="badge bg-hardreset">{{ item.categorie }}</span>
+                {% elif item.categorie == 'FRP' %}<span class="badge bg-frp">{{ item.categorie }}</span>
+                {% else %}<span class="badge bg-marketing">{{ item.categorie }}</span>{% endif %}
+                
+                {% if item.lien and ('youtube.com' in item.lien or 'youtu.be' in item.lien) %}
+                    {% set video_id = item.lien.split('v=')[1].split('&')[0] if 'v=' in item.lien else item.lien.split('/')[-1] %}
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/{{ video_id }}?rel=0" allowfullscreen></iframe>
+                    </div>
+                {% else %}
+                    <img src="{{ item.image_url }}" class="card-img" alt="{{ item.titre }}" onerror="this.src='https://i.postimg.cc/6pQ2y5Gj/placeholder.jpg'">
+                {% endif %}
+                
+                <div class="card-body">
+                    <h3>{{ item.titre }}</h3>
+                    <p>{{ item.description }}</p>
+                    {% if item.lien %}
+                        <a href="{{ item.lien }}" class="btn" target="_blank" style="text-align: center; padding: 12px 20px;">▶ Regarder la vidéo</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; background: #1e293b; border-radius: 16px; border: 1px dashed #475569;">
+                <h3 style="color: #38bdf8; margin-bottom: 10px;">Aucune formation pour le moment</h3>
+                <p style="color: #94a3b8;">Ajoutez vos vidéos depuis l'espace admin.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- POURQUOI NOUS (AVEC VRAIES IMAGES) -->
+    <section id="services">
+        <h2 class="section-titre">Pourquoi choisir Jacob Tools ?</h2>
+        <p class="section-sous-titre">Nous mettons la qualité et la pédagogie au cœur de nos formations.</p>
+        
+        <div class="features-grid">
+            <!-- Image 1: Vidéos -->
+            <div class="feature-item">
+                <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=800&auto=format&fit=crop" class="feature-img" alt="Vidéos HD">
+                <div class="feature-content">
+                    <h3>Vidéos HD Exclusives</h3>
+                    <p>Apprenez avec des vidéos claires, animées et de haute qualité.</p>
+                </div>
+            </div>
+            <!-- Image 2: Accès à vie -->
+            <div class="feature-item">
+                <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=800&auto=format&fit=crop" class="feature-img" alt="Accès à vie">
+                <div class="feature-content">
+                    <h3>Accès à Vie</h3>
+                    <p>Une fois formé, gardez l'accès à vos contenus pour toujours.</p>
+                </div>
+            </div>
+            <!-- Image 3: Support -->
+            <div class="feature-item">
+                <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop" class="feature-img" alt="Support">
+                <div class="feature-content">
+                    <h3>Support Technique</h3>
+                    <p>Une équipe disponible pour répondre à toutes vos questions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="footer-content">
+            <h2 class="section-titre" style="font-size: 2em; margin-bottom: 10px;">Prêt à commencer ?</h2>
+            <p>Rejoignez la communauté Jacob Tools et transformez vos compétences dès aujourd'hui.</p>
+            <div class="footer-links">
+                <a href="/">Accueil</a>
+                <a href="#formations">Formations</a>
+                <a href="#services">Services</a>
+            </div>
+            <div class="copyright">
+                &copy; 2026 Jacob Tools. Tous droits réservés. Propulsé par la technologie.
+            </div>
+        </div>
+    </footer>
+
+    <!-- BOUTON FLOTTANT WHATSAPP -->
+    <!-- REMPLACE LE NUMERO '243000000000' PAR TON VRAI NUMERO WHATSAPP AVEC L'INDICATIF DU PAYS (SANS LE +) -->
+    <a href="https://wa.me/243000000000?text=Bonjour%20Jacob%20Tools,%20je%20suis%20int%C3%A9ress%C3%A9%20par%20vos%20formations." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="white"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.126-.074-.272-.084-.621-.201-1.066-.395-.937-.409-1.545-1.388-1.591-1.45-.045-.063-.377-.509-.377-.965 0-.457.239-.681.324-.774.085-.093.186-.117.248-.117.062 0 .124.001.177.004.057.003.133-.021.207.158.077.187.262.64.284.686.022.046.036.1.007.163-.029.063-.043.102-.086.158-.043.056-.091.126-.13.169-.043.046-.088.096-.038.187.05.091.222.367.476.594.326.298.599.39.687.434.088.044.14.037.193-.022.053-.06.227-.263.287-.353.06-.091.12-.075.202-.045.082.03 1.04.49 1.219.579.179.089.298.133.341.208.043.075.043.433-.101.838z"/></svg>
+    </a>
+
+    <script>
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        let slideInterval;
+
+        function showSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            slides[n].classList.add('active');
+            dots[n].classList.add('active');
+            slideIndex = n;
+        }
+        function nextSlide() { slideIndex = (slideIndex + 1) % slides.length; showSlide(slideIndex); }
+        function currentSlide(n) { clearInterval(slideInterval); showSlide(n); slideInterval = setInterval(nextSlide, 5000); }
+        slideInterval = setInterval(nextSlide, 5000);
+    </script>
+</body>
+</html>"""
+
+with open('templates/index.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("✅ Le diaporama, les vraies images et le bouton WhatsApp sont prets !")
