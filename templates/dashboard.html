@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Jacob Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+        body { background-color: #0b1120; color: #e2e8f0; display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background-color: #0f172a; border-right: 1px solid #1e293b; padding: 30px 20px; display: flex; flex-direction: column; }
+        .logo { font-size: 1.5em; font-weight: 800; color: white; text-decoration: none; margin-bottom: 40px; text-align: center; }
+        .logo span { color: #38bdf8; }
+        .nav-item { display: block; padding: 12px 20px; color: #94a3b8; text-decoration: none; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; background: transparent; border: none; width: 100%; text-align: left; cursor: pointer; font-size: 1em; font-weight: 500; }
+        .nav-item:hover, .nav-item.active { background-color: #1e293b; color: #38bdf8; }
+        .logout-btn { margin-top: auto; color: #f87171 !important; }
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .card { background: #1e293b; border-radius: 16px; border: 1px solid #334155; padding: 30px; margin-bottom: 30px; }
+        .card h2 { color: #38bdf8; font-size: 1.3em; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 15px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #cbd5e1; font-size: 0.9em; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-family: inherit; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        button.btn-submit { width: 100%; padding: 16px; background: #38bdf8; color: #0b1120; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        button.btn-submit:hover { background: #0ea5e9; }
+        .content-item { display: flex; align-items: center; background: #0f172a; padding: 15px; border-radius: 12px; border: 1px solid #1e293b; flex-wrap: wrap; gap: 15px; margin-bottom: 10px; }
+        .content-item img { width: 100px; height: 70px; object-fit: cover; border-radius: 8px; }
+        .content-info { flex: 1; min-width: 200px; }
+        .content-info h3 { color: white; font-size: 1.1em; }
+        .content-info p { color: #94a3b8; font-size: 0.85em; }
+        .actions { display: flex; gap: 10px; }
+        .btn-edit { background: rgba(56, 189, 248, 0.1); color: #38bdf8; padding: 10px 15px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .btn-delete { background: rgba(248, 113, 113, 0.1); color: #f87171; padding: 10px 15px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        @media (max-width: 768px) { body { flex-direction: column; } .sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; } .form-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="/" class="logo">JACOB<span>TOOLS</span></a>
+        <button class="nav-item active" onclick="openTab('list')">📋 Gestion</button>
+        <button class="nav-item" onclick="openTab('add')">➕ Ajouter</button>
+        <a href="/" class="nav-item" target="_blank">🌐 Voir le site</a>
+        <a href="/gestion-jacob-2026/logout" class="nav-item logout-btn">🚪 Déconnexion</a>
+    </div>
+    <div class="main-content">
+        <div id="tab-list" class="tab-content active">
+            <div class="card">
+                <h2>Vos vidéos ({{ contenus|length }})</h2>
+                {% for item in contenus %}
+                <div class="content-item">
+                    <img src="{{ item.image_url }}" onerror="this.src='https://i.postimg.cc/6pQ2y5Gj/placeholder.jpg'">
+                    <div class="content-info">
+                        <h3>{{ item.titre }}</h3>
+                        <p>{{ item.description[:50] }}...</p>
+                    </div>
+                    <div class="actions">
+                        <a href="/gestion-jacob-2026/modifier/{{ item.id }}" class="btn-edit">Modifier</a>
+                        <a href="/gestion-jacob-2026/supprimer/{{ item.id }}" class="btn-delete" onclick="return confirm('Supprimer ?')">Supprimer</a>
+                    </div>
+                </div>
+                {% else %}
+                <p style="text-align:center; color:#64748b; padding: 20px;">Aucun contenu. Cliquez sur "Ajouter" à gauche.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="tab-add" class="tab-content {% if modifier %}active{% endif %}">
+            <div class="card">
+                {% if modifier %}<h2>Modifier la formation</h2><form method="POST" action="/gestion-jacob-2026/modifier/{{ modifier.id }}">
+                {% else %}<h2>Ajouter une formation</h2><form method="POST" action="/gestion-jacob-2026/ajouter">{% endif %}
+                    <div class="form-row">
+                        <div class="form-group"><label>Titre</label><input type="text" name="titre" value="{{ modifier.titre if modifier else '' }}" required></div>
+                        <div class="form-group"><label>Catégorie</label>
+                            <select name="categorie">
+                                <option value="Déblocage" {% if modifier and modifier.categorie == 'Déblocage' %}selected{% endif %}>Déblocage</option>
+                                <option value="Hard Reset" {% if modifier and modifier.categorie == 'Hard Reset' %}selected{% endif %}>Hard Reset</option>
+                                <option value="FRP" {% if modifier and modifier.categorie == 'FRP' %}selected{% endif %}>FRP</option>
+                                <option value="Marketing" {% if modifier and modifier.categorie == 'Marketing' %}selected{% endif %}>Marketing</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Lien Image</label><input type="url" name="image_url" value="{{ modifier.image_url if modifier else '' }}" required></div>
+                    <div class="form-group"><label>Description</label><textarea name="description" rows="3" required>{{ modifier.description if modifier else '' }}</textarea></div>
+                    <div class="form-group"><label>Lien Vidéo</label><input type="url" name="lien" value="{{ modifier.lien if modifier else '' }}"></div>
+                    <button type="submit" class="btn-submit">{% if modifier %}Mettre à jour{% else %}Publier{% endif %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            if(tabName === 'list') document.querySelectorAll('.nav-item')[0].classList.add('active');
+            else document.querySelectorAll('.nav-item')[1].classList.add('active');
+        }
+    </script>
+</body>
+</html>
