@@ -42,7 +42,7 @@
         <button class="nav-item active" onclick="openTab('list')">📋 Gestion</button>
         <button class="nav-item" onclick="openTab('add')">➕ Ajouter</button>
         <a href="/" class="nav-item" target="_blank">🌐 Voir le site</a>
-        <a href="/gestion-jacob-2026/logout" class="nav-item logout-btn">🚪 Déconnexion</a>
+        <a href="/admin/logout" class="nav-item logout-btn">🚪 Déconnexion</a>
     </div>
     <div class="main-content">
         <div id="tab-list" class="tab-content active">
@@ -56,8 +56,8 @@
                         <p>{{ item.description[:50] }}...</p>
                     </div>
                     <div class="actions">
-                        <a href="/gestion-jacob-2026/modifier/{{ item.id }}" class="btn-edit">Modifier</a>
-                        <a href="/gestion-jacob-2026/supprimer/{{ item.id }}" class="btn-delete" onclick="return confirm('Supprimer ?')">Supprimer</a>
+                        <a href="/admin/modifier/{{ item.id }}" class="btn-edit">Modifier</a>
+                        <a href="/admin/supprimer/{{ item.id }}" class="btn-delete" onclick="return confirm('Supprimer ?')">Supprimer</a>
                     </div>
                 </div>
                 {% else %}
@@ -67,8 +67,8 @@
         </div>
         <div id="tab-add" class="tab-content {% if modifier %}active{% endif %}">
             <div class="card">
-                {% if modifier %}<h2>Modifier la formation</h2><form method="POST" action="/gestion-jacob-2026/modifier/{{ modifier.id }}">
-                {% else %}<h2>Ajouter une formation</h2><form method="POST" action="/gestion-jacob-2026/ajouter">{% endif %}
+                {% if modifier %}<h2>Modifier la formation</h2><form method="POST" action="/admin/modifier/{{ modifier.id }}">
+                {% else %}<h2>Ajouter une formation</h2><form method="POST" action="/admin/ajouter">{% endif %}
                     <div class="form-row">
                         <div class="form-group"><label>Titre</label><input type="text" name="titre" value="{{ modifier.titre if modifier else '' }}" required></div>
                         <div class="form-group"><label>Catégorie</label>
