@@ -232,7 +232,7 @@
                     <h3>{{ item.titre }}</h3>
                     <p>{{ item.description }}</p>
                     {% if item.lien %}
-                        <a href="{{ item.lien }}" class="btn" target="_blank" style="text-align: center; padding: 12px 20px;">▶ Regarder la vidéo</a>
+                        <a href="/video/{{ item.id }}" class="btn" style="text-align: center; padding: 12px 20px;">▶ Voir la formation</a>
                     {% endif %}
                 </div>
             </div>
