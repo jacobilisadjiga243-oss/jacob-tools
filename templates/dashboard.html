@@ -39,8 +39,10 @@
 <body>
     <div class="sidebar">
         <a href="/" class="logo">JACOB<span>TOOLS</span></a>
-        <button class="nav-item active" onclick="openTab('list')">📋 Gestion</button>
+        <a href="/admin" class="nav-item {% if page == 'list' %}active{% endif %}">📋 Gestion</a>
         <button class="nav-item" onclick="openTab('add')">➕ Ajouter</button>
+        <a href="/admin/messages" class="nav-item {% if page == 'messages' %}active{% endif %}">✉️ Messages</a>
+        <a href="/admin/parametres" class="nav-item {% if page == 'parametres' %}active{% endif %}">⚙️ Paramètres</a>
         <a href="/" class="nav-item" target="_blank">🌐 Voir le site</a>
         <a href="/admin/logout" class="nav-item logout-btn">🚪 Déconnexion</a>
     </div>
@@ -87,6 +89,24 @@
                 </form>
             </div>
         </div>
+    </div>
+        
+        <!-- SECTION MESSAGES (Vide pour l'instant) -->
+        <div id="tab-messages" class="tab-content {% if page == 'messages' %}active{% endif %}">
+            <div class="card">
+                <h2>Messages reçus</h2>
+                <p style="color: #94a3b8; text-align: center; padding: 40px;">La boîte de réception sera bientôt disponible.</p>
+            </div>
+        </div>
+
+        <!-- SECTION PARAMETRES (Vide pour l'instant) -->
+        <div id="tab-parametres" class="tab-content {% if page == 'parametres' %}active{% endif %}">
+            <div class="card">
+                <h2>Paramètres du site</h2>
+                <p style="color: #94a3b8; text-align: center; padding: 40px;">Les paramètres seront bientôt disponibles.</p>
+            </div>
+        </div>
+
     </div>
     <script>
         function openTab(tabName) {

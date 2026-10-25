@@ -158,6 +158,19 @@ def deconnexion():
     session.pop('user_nom', None)
     return redirect(url_for('accueil'))
 
+
+@app.route(ADMIN_URL + '/messages')
+def admin_messages():
+    if not session.get('logged_in'): return redirect(url_for('admin'))
+    # Pour l'instant, on renvoie une page vide qu'on remplira plus tard
+    return render_template('dashboard.html', contenus=[], modifier=None, page='messages')
+
+@app.route(ADMIN_URL + '/parametres')
+def admin_parametres():
+    if not session.get('logged_in'): return redirect(url_for('admin'))
+    # Pour l'instant, on renvoie une page vide qu'on remplira plus tard
+    return render_template('dashboard.html', contenus=[], modifier=None, page='parametres')
+
 @app.route(ADMIN_URL, methods=['GET', 'POST'])
 def admin():
     if session.get('logged_in'):
@@ -173,7 +186,7 @@ def admin():
                 print(f"Erreur admin: {e}")
             finally:
                 conn.close()
-        return render_template('dashboard.html', contenus=contenus, modifier=None)
+        return render_template('dashboard.html', contenus=contenus, modifier=None, page='list')
     
     if request.method == 'POST':
         if check_password_hash(HASHED_PASSWORD, request.form.get('password')):
