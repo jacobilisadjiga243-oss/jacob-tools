@@ -157,7 +157,13 @@
             <a href="#formations">Formations</a>
             <a href="#services">Services</a>
             <a href="/apropos">À propos</a>
-            <a href="#contact" class="btn-nav">Contact</a>
+            {% if session.get('user_nom') %}
+                <span style="color: #38bdf8; font-weight: 600;">Bonjour, {{ session['user_nom'] }}</span>
+                <a href="/deconnexion" style="color: #f87171;">Déconnexion</a>
+            {% else %}
+                <a href="/connexion" style="color: #cbd5e1;">Connexion</a>
+                <a href="/inscription" class="btn-nav" style="background: #10b981;">S'inscrire</a>
+            {% endif %}
         </div>
     </nav>
 
