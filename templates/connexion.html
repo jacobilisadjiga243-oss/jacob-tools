@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion - Jacob Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
+        body { background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%); color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .box { background: #1e293b; padding: 40px; border-radius: 16px; border: 1px solid #334155; width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #38bdf8; margin-bottom: 20px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: white; font-family: inherit; }
+        input:focus { outline: none; border-color: #38bdf8; }
+        button { width: 100%; padding: 15px; background: #38bdf8; color: #0b1120; border: none; border-radius: 8px; font-weight: 700; font-size: 1.1em; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #0ea5e9; }
+        a { color: #38bdf8; text-decoration: none; display: block; margin-top: 15px; font-size: 0.9em; }
+        .error { color: #f87171; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Connexion</h2>
+        <form method="POST" action="/connexion">
+            <input type="email" name="email" placeholder="Votre adresse email" required>
+            <input type="password" name="mot_de_passe" placeholder="Votre mot de passe" required>
+            <button type="submit">Se connecter</button>
+        </form>
+        <a href="/inscription">Pas encore de compte ? Inscrivez-vous</a>
+        <p class="error">{{ erreur }}</p>
+    </div>
+</body>
+</html>
