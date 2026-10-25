@@ -47,6 +47,15 @@ def init_db():
                         date_inscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                 """)
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS messages (
+                        id SERIAL PRIMARY KEY,
+                        nom VARCHAR(100) NOT NULL,
+                        email VARCHAR(255) NOT NULL,
+                        message TEXT NOT NULL,
+                        date_envoi TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                """)
             conn.commit()
         except Exception as e:
             print(f"Erreur init DB: {e}")
@@ -159,11 +168,45 @@ def deconnexion():
     return redirect(url_for('accueil'))
 
 
-@app.route(ADMIN_URL + '/messages')
+
+@app.route('/contact', methods=['POST'])
+def contact():
+    nom = request.form.get('nom')
+    email = request.form.get('email')
+    message = request.form.get('message')
+    
+    conn = get_db()
+    if conn:
+        try:
+            with conn.cursor() as cur:
+                cur.execute("INSERT INTO messages (nom, email, message) VALUES (%s, %s, %s);", (nom, email, message))
+            conn.commit()
+        except Exception as e:
+            print(f"Erreur contact: {e}")
+        finally:
+            conn.close()
+            
+    return redirect(url_for('apropos', succes='1'))
+
+@app.route(ADMIN_URL + '/messages', methods=['GET'])
+def admin_messages():
 def admin_messages():
     if not session.get('logged_in'): return redirect(url_for('admin'))
-    # Pour l'instant, on renvoie une page vide qu'on remplira plus tard
-    return render_template('dashboard.html', contenus=[], modifier=None, page='messages')
+    
+    messages = []
+    conn = get_db()
+    if conn:
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT id, nom, email, message, date_envoi FROM messages ORDER BY date_envoi DESC;")
+                rows = cur.fetchall()
+                messages = [{"id": r[0], "nom": r[1], "email": r[2], "message": r[3], "date": r[4]} for r in rows]
+        except Exception as e:
+            print(f"Erreur lecture messages: {e}")
+        finally:
+            conn.close()
+            
+    return render_template('dashboard.html', contenus=[], modifier=None, page='messages', messages=messages)
 
 @app.route(ADMIN_URL + '/parametres')
 def admin_parametres():

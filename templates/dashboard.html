@@ -94,8 +94,21 @@
         <!-- SECTION MESSAGES (Vide pour l'instant) -->
         <div id="tab-messages" class="tab-content {% if page == 'messages' %}active{% endif %}">
             <div class="card">
-                <h2>Messages reçus</h2>
-                <p style="color: #94a3b8; text-align: center; padding: 40px;">La boîte de réception sera bientôt disponible.</p>
+                <h2>Messages reçus ({{ messages|length if messages else 0 }})</h2>
+                
+                {% if messages %}
+                    {% for msg in messages %}
+                    <div class="content-item" style="flex-direction: column; align-items: flex-start; padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 10px;">
+                            <h3 style="color: #38bdf8;">{{ msg.nom }} <span style="font-size: 0.8em; color: #94a3b8;">({{ msg.email }})</span></h3>
+                            <span style="font-size: 0.8em; color: #64748b;">{{ msg.date.strftime('%d/%m/%Y à %H:%M') if msg.date else '' }}</span>
+                        </div>
+                        <p style="color: #cbd5e1; width: 100%;">{{ msg.message }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: #94a3b8; text-align: center; padding: 40px;">Aucun message pour le moment.</p>
+                {% endif %}
             </div>
         </div>
 
