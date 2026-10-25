@@ -149,7 +149,8 @@ def connexion():
                 return render_template('connexion.html', erreur="Une erreur est survenue.")
             finally:
                 conn.close()
-    return render_template('connexion.html', erreur="")
+    succes = request.args.get('succes')
+    return render_template('connexion.html', erreur="", succes=succes)
 
 @app.route('/deconnexion')
 def deconnexion():

@@ -15,7 +15,15 @@
         button:hover { background: #0ea5e9; }
         a { color: #38bdf8; text-decoration: none; display: block; margin-top: 15px; font-size: 0.9em; }
         .error { color: #f87171; margin-top: 15px; }
-    </style>
+    
+        @media (max-width: 768px) {
+            .box { padding: 25px 20px; margin: 15px; }
+            input { padding: 18px; font-size: 16px; margin: 12px 0; }
+            button { padding: 18px; font-size: 1.2em; }
+            h2 { font-size: 1.8em; }
+        }
+
+</style>
 </head>
 <body>
     <div class="box">
@@ -27,6 +35,9 @@
         </form>
         <a href="/inscription">Pas encore de compte ? Inscrivez-vous</a>
         <p class="error">{{ erreur }}</p>
+        {% if succes %}
+            <p style="color: #10b981; margin-top: 15px; font-weight: 600;">✅ Compte créé avec succès ! Connectez-vous.</p>
+        {% endif %}
     </div>
 </body>
 </html>
