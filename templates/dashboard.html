@@ -103,7 +103,21 @@
         <div id="tab-parametres" class="tab-content {% if page == 'parametres' %}active{% endif %}">
             <div class="card">
                 <h2>Paramètres du site</h2>
-                <p style="color: #94a3b8; text-align: center; padding: 40px;">Les paramètres seront bientôt disponibles.</p>
+                <form method="POST" action="/admin/parametres">
+                    <div class="form-group">
+                        <label>Numéro WhatsApp (ex: 243977982648)</label>
+                        <input type="text" name="whatsapp" value="{{ params.whatsapp if params else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Adresse Email de contact</label>
+                        <input type="email" name="email" value="{{ params.email if params else '' }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Lien Facebook (optionnel)</label>
+                        <input type="url" name="facebook" value="{{ params.facebook if params else '' }}">
+                    </div>
+                    <button type="submit" class="btn-submit">Enregistrer les paramètres</button>
+                </form>
             </div>
         </div>
 
