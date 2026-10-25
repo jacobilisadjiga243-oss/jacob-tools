@@ -190,8 +190,8 @@ def contact():
 
 @app.route(ADMIN_URL + '/messages', methods=['GET'])
 def admin_messages():
-def admin_messages():
-    if not session.get('logged_in'): return redirect(url_for('admin'))
+    if not session.get('logged_in'): 
+        return redirect(url_for('admin'))
     
     messages = []
     conn = get_db()
