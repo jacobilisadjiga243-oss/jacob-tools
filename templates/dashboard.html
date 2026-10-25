@@ -39,7 +39,7 @@
 <body>
     <div class="sidebar">
         <a href="/" class="logo">JACOB<span>TOOLS</span></a>
-        <a href="/admin" class="nav-item {% if page == 'list' %}active{% endif %}">📋 Gestion</a>
+        <a href="/admin" class="nav-item {% if page == 'list' or not page %}active{% endif %}">📋 Gestion</a>
         <button class="nav-item" onclick="openTab('add')">➕ Ajouter</button>
         <a href="/admin/messages" class="nav-item {% if page == 'messages' %}active{% endif %}">✉️ Messages</a>
         <a href="/admin/parametres" class="nav-item {% if page == 'parametres' %}active{% endif %}">⚙️ Paramètres</a>
@@ -47,7 +47,7 @@
         <a href="/admin/logout" class="nav-item logout-btn">🚪 Déconnexion</a>
     </div>
     <div class="main-content">
-        <div id="tab-list" class="tab-content active">
+        <div id="tab-list" class="tab-content {% if not page or page == 'list' %}active{% endif %}">
             <div class="card">
                 <h2>Vos vidéos ({{ contenus|length }})</h2>
                 {% for item in contenus %}
